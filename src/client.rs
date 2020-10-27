@@ -62,8 +62,7 @@ impl Power for PowerClient {
     }
 
     fn get_profile(&mut self) -> Result<String, String> {
-        let m = Message::new_method_call(DBUS_NAME, DBUS_PATH, DBUS_IFACE, "GetProfile")?;
-        let r = self.bus.send_with_reply_and_block(m, Duration::from_millis(TIMEOUT)).map_err(err_str)?;
+        let r = self.call_method::<bool>("GetProfile", None)?;
         r.get1().ok_or_else(|| "return value not found".to_string())
     }
 
@@ -93,8 +92,7 @@ impl Power for PowerClient {
     }
 
     fn get_charge_thresholds(&mut self) -> Result<(u8, u8), String> {
-        let m = Message::new_method_call(DBUS_NAME, DBUS_PATH, DBUS_IFACE, "GetChargeThresholds")?;
-        let r = self.bus.send_with_reply_and_block(m, Duration::from_millis(TIMEOUT)).map_err(err_str)?;
+        let r = self.call_method::<bool>("GetChargeThresholds", None)?;
         r.get1().ok_or_else(|| "return value not found".to_string())
     }
 
