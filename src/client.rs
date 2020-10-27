@@ -31,7 +31,7 @@ impl PowerClient {
         let r = self
             .bus
             .send_with_reply_and_block(m, Duration::from_millis(TIMEOUT))
-            .map_err(|why| format!("daemon returned an error message: {}", err_str(why)))?;
+            .map_err(|why| format!("daemon returned an error message: \"{}\"", err_str(why.message().unwrap_or(""))))?;
 
         Ok(r)
     }
