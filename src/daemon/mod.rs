@@ -253,9 +253,11 @@ pub async fn daemon() -> Result<(), String> {
                     polkit::check_authorization(&c, pid, 0, THRESHOLD_POLICY).await.map_err(err_str)?
                 };
                 if permitted {
-                    set_charge_thresholds(thresholds).map_err(err_str)?;
+                    set_charge_thresholds(thresholds)?;
+                    Ok(())
+                } else {
+                    Err("Operation not permitted by Polkit".to_string())
                 }
-                Ok::<_, String>(())
             };
             async move {
                 ctx.reply(res.await.map_err(|e| MethodErr::failed(&e)))
